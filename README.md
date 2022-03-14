@@ -9,7 +9,8 @@ Betweenness centrality 概念為尋找哪一個點在一個 Graph 中屬於重�
 
 ![image](https://user-images.githubusercontent.com/51444652/158140318-bf941edf-d256-4992-aa62-009eff357ddc.png)
 
-論文參數設置: 
+論文參數設置:
+
 ![image](https://user-images.githubusercontent.com/51444652/158140348-9fb80ca8-3f76-4e3e-9784-6a71f88e6c08.png)
 
 
