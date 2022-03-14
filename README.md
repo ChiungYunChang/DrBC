@@ -1,10 +1,9 @@
 # DrBC
 Implement the DrBC approach from Learning to Identify High Betweenness Centrality Nodes from Scratch: A Novel Graph Neural Network Approach. paper : https://arxiv.org/pdf/1905.10418.pdf
 
-[Headers](### 1.-INTRODUCTION )  
-[Emphasis](#emphasis
-[1.INTRODUCTION](###1.INTRODUCTION )  
-[2.IMPLEMENTATION](###2.IMPLEMENTATION) 
+
+[1.INTRODUCTION](#1introduction)  
+[2.IMPLEMENTATION](#2implementation) 
 [2.1 Create Graph](#####2.1.1.Generating synthetic graph) 
 
 ### 1.	INTRODUCTION  
