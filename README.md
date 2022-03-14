@@ -5,11 +5,13 @@ Implement the DrBC approach from Learning to Identify High Betweenness Centralit
 * [1.INTRODUCTION](#1introduction)  
 * [2.IMPLEMENTATION](#2implementation) 
   * [2.1 Create Graph](#21-create-graph)
-  * [2.1.1 Generating synthetic graph](#211-generating-synthetic-graph)
-  * [ 2.1.2 Calculate betweenness centrality](#212calculate-betweenness-centrality)
-* [3.Encoder](#3encoder)
-  * [2.1 2.2.1 Neighborhood Aggregation - GCN](#21-create-graph)
-* 
+    * [2.1.1 Generating synthetic graph](#211-generating-synthetic-graph)
+    * [ 2.1.2 Calculate betweenness centrality](#212calculate-betweenness-centrality)
+  * [2.2.Encoder](#22encoder)
+    * [2.2.1 Neighborhood Aggregation - GCN](#221-neighborhood-aggregation---gcn)
+    * [2.2.2 COMBINE Function](#222combine-function) 
+    * [2.2.3 Layer Aggregation](#223layer-aggregation)
+  * [2.3 Decoder](#23decoder)
 
 
 ### 1.	INTRODUCTION  
