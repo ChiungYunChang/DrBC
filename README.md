@@ -12,5 +12,16 @@ Betweenness centrality 概念為尋找哪一個點在一個 Graph 中屬於重�
 論文參數設置: 
 ![image](https://user-images.githubusercontent.com/51444652/158140348-9fb80ca8-3f76-4e3e-9784-6a71f88e6c08.png)
 
+
+#### 2.1	 Create Graph 
+
+##### 2.1.1 Generating synthetic graph  
+使用 nx.random_graphs.powerlaw_cluster_grap來生成圖片， 參數設置 with n=“number of nodes”, m=4, p=0.05 ，Graph follow by power-law distribution nx.random_graphs.powerlaw_cluster_graph(random.randint(500,800), 4, 0.05) 
+透過生成的 Graph 取出 edge index 和 node 的資訊，在 edge index 中因為必須考慮到邊是屬於 bidirectional ，因此需要另外處理改成雙向的形式。在 node 資訊中，因為在 model 的 initial feature 長相為 degree[[n],1,1] ，所以需要對 node 做轉換。
+
+##### 2.1.2 Calculate betweenness centrality
+透過 nx.betweenness_centrality 計算點與點之間的 BC value ，因為產生出來的 output 會有太小的問題，會導致 model train 不起來，所以多加了 log 來收斂 。
+
+
 ## training result 
 ![image](https://user-images.githubusercontent.com/51444652/158065393-a22e9e26-da53-458f-af6c-3efad2bee752.png)
