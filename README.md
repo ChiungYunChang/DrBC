@@ -7,6 +7,9 @@ Implement the DrBC approach from Learning to Identify High Betweenness Centralit
   * [2.1 Create Graph](#21-create-graph)
   * [2.1.1 Generating synthetic graph](#211-generating-synthetic-graph)
   * [ 2.1.2 Calculate betweenness centrality](#212calculate-betweenness-centrality)
+* [3.Encoder](#3encoder)
+  * [2.1 2.2.1 Neighborhood Aggregation - GCN](#21-create-graph)
+* 
 
 
 ### 1.	INTRODUCTION  
@@ -31,6 +34,36 @@ Betweenness centrality 概念為尋找哪一個點在一個 Graph 中屬於重�
 ##### 2.1.2 Calculate betweenness centrality
 透過 nx.betweenness_centrality 計算點與點之間的 BC value ，因為產生出來的 output 會有太小的問題，會導致 model train 不起來，所以多加了 log 來收斂 。
 
+
+#### 2.2	 Encoder
+在 Encoder 使用三層的 GCN Layer ，embedding dimension 設置為 (128, 128)
+
+##### 2.2.1 Neighborhood Aggregation - GCN
+在Encoder 的部分，透過 Neighborhood aggregation models 的方式來得知每個點的 attributes ，好處在於節點之間的參數可以共享也可以在沒看過的節點中給予其 embedding vector 。
+
+![image](https://user-images.githubusercontent.com/51444652/158143193-0b4084f0-f8c6-4583-93bc-1eff05ecde70.png)
+
+在實作中使用  message passing 的方式 ，其概念跟 convolution filter很像 ， 透過相鄰點來求得點的特徵 。(如下) 
+
+![image](https://user-images.githubusercontent.com/51444652/158143496-3b243491-b7ac-41ed-8833-9223fe63e401.png)
+
+photo credit to :( https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial7/GNN_overview.html) 
+
+Message passing 利用 Pytorch 中 CREATING MESSAGE PASSING NETWORKS 中所提供的 Implementing the GCN Layer 
+
+##### 2.2.2 COMBINE Function 
+為了獲取比較好的 feature ， combine 在Layer 中neighborhood 的 embedding 和上一層的 embedding，因此採用了 GRU gate的機制， update gate 用來選擇要記得前一層多少的資訊。(公式如下) 
+
+![image](https://user-images.githubusercontent.com/51444652/158143841-3b596bee-d014-4a2e-bf1c-c4c76b7ed523.png)
+
+作者比較了其他的 Combine function，發現使用 GRU 能夠取得較佳的特徵。
+
+##### 2.2.3 Layer Aggregation 
+論文中以element-wise的方式，取出最大值，得到一個128維的output。
+計算 Betweennsess centrality 使用 nx.betweenness_centrality 來求 BC 的數值。
+
+##### 2.3 Decoder
+採用兩成的 hidden layer 和 LeakyReLU 將先前的 embedding 轉換為 score 。 
 
 ## training result 
 ![image](https://user-images.githubusercontent.com/51444652/158065393-a22e9e26-da53-458f-af6c-3efad2bee752.png)
