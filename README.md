@@ -86,7 +86,7 @@ Sample node pair : 這裡採用論文的方式隨機 sample 5 個 node (一個�
 使用 Kendall tau 來觀察其變數之間的相關程度 (ground truth value / predict value)，這裡使用 scipy.stats.kendalltau 來計算。
 透過 model 運算過後得出 predict 的 BC value ，將預測的 BC value 與 ground  truth BC value 排序，取出 top 1 、top5 、top10 的 accuracy。
 
-### 4.Experiment Result]
+### 4.Experiment Result
 
 ![image](https://user-images.githubusercontent.com/51444652/158565319-fd056419-6d1d-4380-9a22-dd3d8705ed78.png)
 
