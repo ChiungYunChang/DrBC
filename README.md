@@ -12,6 +12,10 @@ Implement the DrBC approach from Learning to Identify High Betweenness Centralit
     * [2.2.2 COMBINE Function](#222combine-function) 
     * [2.2.3 Layer Aggregation](#223layer-aggregation)
   * [2.3 Decoder](#23decoder)
+* [3.Training Algorithm](#24training-algorithm)
+  * [3.1Paurwise ranking loss](#241pairwise-ranking-loss)
+* [4.Experiment Result](#3experiment-result)
+  * [4.1 COMPARE] (#41compare)
 
 
 ### 1.	INTRODUCTION  
@@ -64,8 +68,43 @@ Message passing 利用 Pytorch 中 CREATING MESSAGE PASSING NETWORKS 中所提�
 論文中以element-wise的方式，取出最大值，得到一個128維的output。
 計算 Betweennsess centrality 使用 nx.betweenness_centrality 來求 BC 的數值。
 
-##### 2.3 Decoder
+#### 2.3 Decoder
 採用兩成的 hidden layer 和 LeakyReLU 將先前的 embedding 轉換為 score 。 
 
-## training result 
-![image](https://user-images.githubusercontent.com/51444652/158065393-a22e9e26-da53-458f-af6c-3efad2bee752.png)
+### 3 Training Algorithm
+
+![image](https://user-images.githubusercontent.com/51444652/158565102-974b3365-9548-424d-91fb-0052b9068513.png)
+
+
+#### 3.1 Paurwise ranking loss
+Loss function
+
+![image](https://user-images.githubusercontent.com/51444652/158565176-c974cae0-a67c-472c-8853-8f00e3c8dc26.png)
+
+Sample node pair : 這裡採用論文的方式隨機 sample 5 個 node (一個點要與五個
+點做比較) 。
+使用 Kendall tau 來觀察其變數之間的相關程度 (ground truth value / predict value)，這裡使用 scipy.stats.kendalltau 來計算。
+透過 model 運算過後得出 predict 的 BC value ，將預測的 BC value 與 ground  truth BC value 排序，取出 top 1 、top5 、top10 的 accuracy。
+
+### 4.Experiment Result](#3experiment-result)
+
+![image](https://user-images.githubusercontent.com/51444652/158565319-fd056419-6d1d-4380-9a22-dd3d8705ed78.png)
+
+#### 4.1 COMPARE 
+利用 nx.random_graphs.powerlaw_cluster_graph(n, m, p) 來 Generate Graph 這裡將 n ( node 的個數)、 m (each node 的邊數) 、 p (Graph 形成三角形的機率) 做調整以觀察其中的變化 。
+
+* 針對 node 個數調整 (800-1000)、(800-500)、(400-500)、(100-300) 
+![image](https://user-images.githubusercontent.com/51444652/158565661-7f015462-76ae-4b32-9322-9c36f72d1326.png)
+
+
+* 針對 number of random edges to add each new node : 2、4、8、10
+![image](https://user-images.githubusercontent.com/51444652/158565734-2456d8de-6119-4749-a697-317fa4ae5450.png)
+
+
+* p (Graph 形成三角形的機率) 做調整
+![image](https://user-images.githubusercontent.com/51444652/158565884-7e825845-bde4-47b6-912d-e9b06c726f64.png)
+![image](https://user-images.githubusercontent.com/51444652/158565937-def9e82e-1a84-4857-9700-23058ff30b0d.png)
+
+
+
+
