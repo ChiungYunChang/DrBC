@@ -102,9 +102,8 @@ Sample node pair : 這裡採用論文的方式隨機 sample 5 個 node (一個�
 
 
 * p (Graph 形成三角形的機率) 做調整
-* 
-![image](https://user-images.githubusercontent.com/51444652/158565884-7e825845-bde4-47b6-912d-e9b06c726f64.png)
 
+![image](https://user-images.githubusercontent.com/51444652/158565884-7e825845-bde4-47b6-912d-e9b06c726f64.png)
 ![image](https://user-images.githubusercontent.com/51444652/158565937-def9e82e-1a84-4857-9700-23058ff30b0d.png)
 
 
