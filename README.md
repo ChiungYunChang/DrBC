@@ -13,7 +13,7 @@ Implement the DrBC approach from Learning to Identify High Betweenness Centralit
     * [2.2.3 Layer Aggregation](#223-layer-aggregation)
   * [2.3 Decoder](#23-decoder)
 * [3. Training Algorithm](#3-training-algorithm)
-  * [3.1 Paiurwise ranking loss](#31-pairwise-ranking-loss)
+  * [3.1 Pairwise ranking loss](#31-pairwise-ranking-loss)
 * [4. Experiment Result](#4-experiment-result)
   * [4.1 COMPARE](#41-compare)
 
@@ -76,7 +76,7 @@ Message passing 利用 Pytorch 中 CREATING MESSAGE PASSING NETWORKS 中所提�
 ![image](https://user-images.githubusercontent.com/51444652/158565102-974b3365-9548-424d-91fb-0052b9068513.png)
 
 
-#### 3.1 Paurwise ranking loss
+#### 3.1 Pairwise ranking loss
 Loss function
 
 ![image](https://user-images.githubusercontent.com/51444652/158565176-c974cae0-a67c-472c-8853-8f00e3c8dc26.png)
@@ -86,7 +86,7 @@ Sample node pair : 這裡採用論文的方式隨機 sample 5 個 node (一個�
 使用 Kendall tau 來觀察其變數之間的相關程度 (ground truth value / predict value)，這裡使用 scipy.stats.kendalltau 來計算。
 透過 model 運算過後得出 predict 的 BC value ，將預測的 BC value 與 ground  truth BC value 排序，取出 top 1 、top5 、top10 的 accuracy。
 
-### 4.Experiment Result](#3experiment-result)
+### 4.Experiment Result]
 
 ![image](https://user-images.githubusercontent.com/51444652/158565319-fd056419-6d1d-4380-9a22-dd3d8705ed78.png)
 
