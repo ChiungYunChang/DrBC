@@ -12,10 +12,10 @@ Implement the DrBC approach from Learning to Identify High Betweenness Centralit
     * [2.2.2 COMBINE Function](#222combine-function) 
     * [2.2.3 Layer Aggregation](#223layer-aggregation)
   * [2.3 Decoder](#23decoder)
-* [3.Training Algorithm](#24training-algorithm)
-  * [3.1Paurwise ranking loss](#241pairwise-ranking-loss)
-* [4.Experiment Result](#3experiment-result)
-  * [4.1 COMPARE](#41compare)
+* [3.Training Algorithm](#3training-algorithm)
+  * [3.1 Paurwise ranking loss](#31pairwise-ranking-loss)
+* [4.Experiment Result](#4experiment-result)
+  * [4.1 COMPARE](#41-compare)
 
 
 ### 1.	INTRODUCTION  
