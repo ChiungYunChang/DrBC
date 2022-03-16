@@ -9,12 +9,12 @@ Implement the DrBC approach from Learning to Identify High Betweenness Centralit
     * [ 2.1.2 Calculate betweenness centrality](#212calculate-betweenness-centrality)
   * [2.2.Encoder](#22encoder)
     * [2.2.1 Neighborhood Aggregation - GCN](#221-neighborhood-aggregation---gcn)
-    * [2.2.2 COMBINE Function](#222combine-function) 
-    * [2.2.3 Layer Aggregation](#223layer-aggregation)
-  * [2.3 Decoder](#23decoder)
-* [3.Training Algorithm](#3training-algorithm)
-  * [3.1 Paurwise ranking loss](#31pairwise-ranking-loss)
-* [4.Experiment Result](#4experiment-result)
+    * [2.2.2 COMBINE Function](#222-combine-function) 
+    * [2.2.3 Layer Aggregation](#223-layer-aggregation)
+  * [2.3 Decoder](#23-decoder)
+* [3. Training Algorithm](#3-training-algorithm)
+  * [3.1 Paiurwise ranking loss](#31-pairwise-ranking-loss)
+* [4. Experiment Result](#4-experiment-result)
   * [4.1 COMPARE](#41-compare)
 
 
