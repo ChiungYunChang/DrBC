@@ -15,7 +15,7 @@ Implement the DrBC approach from Learning to Identify High Betweenness Centralit
 * [3.Training Algorithm](#24training-algorithm)
   * [3.1Paurwise ranking loss](#241pairwise-ranking-loss)
 * [4.Experiment Result](#3experiment-result)
-  * [4.1 COMPARE] (#41compare)
+  * [4.1 COMPARE](#41compare)
 
 
 ### 1.	INTRODUCTION  
