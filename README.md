@@ -44,7 +44,6 @@ To calculate the Betweenness Centrality (BC) values between points using nx.betw
 To implement three layers of Graph Convolutional Network (GCN) in the encoder, with an embedding dimension set to (128, 128).
 
 ##### 2.2.1 Neighborhood Aggregation - GCN
-在Encoder 的部分，透過 Neighborhood aggregation models 的方式來得知每個點的 attributes ，好處在於節點之間的參數可以共享也可以在沒看過的節點中給予其 embedding vector 。
 In the Encoder section, utilize neighborhood aggregation models to determine the attributes of each node. The advantage of this approach lies in the ability to share parameters between nodes and provide embedding vectors for unseen nodes. By aggregating information from neighboring nodes, each node can obtain a representation that incorporates information from its local neighborhood. This allows for efficient parameter sharing and enables the model to generalize well to unseen nodes by leveraging information from their neighboring nodes during training.
 
 ![image](https://user-images.githubusercontent.com/51444652/158143193-0b4084f0-f8c6-4583-93bc-1eff05ecde70.png)
