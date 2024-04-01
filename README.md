@@ -19,14 +19,14 @@ Implement the DrBC approach from Learning to Identify High Betweenness Centralit
 
 
 ### 1.	INTRODUCTION  
-Betweenness centrality 概念為尋找哪一個點在一個 Graph 中屬於重要的樞紐位置為連接的重要橋梁，也就是透過點之間來計算最短距離。在實際的場域中Graph 會不斷地改變而且也有可能會不斷地變大，因此有來不及計算的問題，在這篇論文中主要針對 Betweenness centrality 作為探討，論文中提到比起實際算出 Betweenness centrality 正確的數值，得出那些點具有比較高的 BC才是我們所要關切的，因此就有了top-N% nodes的概念，再加上在每個時間點的 Graph 型態都不一樣，所以也引入了 Transfer learning ，目標在於希望可以透過學習多個 Graph 來找到在 Graph中具有 High BC value 節點的特性。此篇論文使用了 encoder-decoder ， encoder 用來將每個 nodes 映射到一個 embedding vector 而 decoder 則是將embedding vector 映射到 BC 的分數。 
+The concept of Betweenness centrality is to identify which nodes in a graph serve as crucial bridges connecting different parts of the network, by calculating the shortest paths between nodes. In real-world scenarios, graphs are often dynamic and may continuously change or grow, posing challenges for timely calculations. This paper primarily focuses on exploring Betweenness centrality. Instead of computing the exact Betweenness centrality values, the paper emphasizes identifying nodes with higher BC values as the ones of interest. Hence, the concept of top-N% nodes is introduced. Additionally, since the graph structure varies at each time point, Transfer learning is introduced to learn characteristics of nodes with high BC values across multiple graphs. The paper employs an encoder-decoder architecture, where the encoder maps each node to an embedding vector, and the decoder maps the embedding vector to BC scores.
 
 ### 2.	IMPLEMENTATION  
-整體架構: 
+Architecture: 
 
 ![image](https://user-images.githubusercontent.com/51444652/158140318-bf941edf-d256-4992-aa62-009eff357ddc.png)
 
-論文參數設置:
+Para:
 
 ![image](https://user-images.githubusercontent.com/51444652/158140348-9fb80ca8-3f76-4e3e-9784-6a71f88e6c08.png)
 
@@ -34,42 +34,41 @@ Betweenness centrality 概念為尋找哪一個點在一個 Graph 中屬於重�
 #### 2.1	 Create Graph 
 
 ##### 2.1.1 Generating synthetic graph  
-使用 nx.random_graphs.powerlaw_cluster_grap來生成圖片， 參數設置 with n=“number of nodes”, m=4, p=0.05 ，Graph follow by power-law distribution nx.random_graphs.powerlaw_cluster_graph(random.randint(500,800), 4, 0.05) 
-透過生成的 Graph 取出 edge index 和 node 的資訊，在 edge index 中因為必須考慮到邊是屬於 bidirectional ，因此需要另外處理改成雙向的形式。在 node 資訊中，因為在 model 的 initial feature 長相為 degree[[n],1,1] ，所以需要對 node 做轉換。
+To generate a graph using nx.random_graphs.powerlaw_cluster_graph, with parameters n as the number of nodes, m as 4, and p as 0.05,Graph follow by power-law distribution nx.random_graphs.powerlaw_cluster_graph(random.randint(500,800), 4, 0.05) 
+To extract the edge index and node information from the generated graph, additional processing is required to handle bidirectional edges in the edge index. For the node information, transformation is necessary to fit the initial feature shape expected by the model, which is degree[[n],1,1].
 
 ##### 2.1.2 Calculate betweenness centrality
-透過 nx.betweenness_centrality 計算點與點之間的 BC value ，因為產生出來的 output 會有太小的問題，會導致 model train 不起來，所以多加了 log 來收斂 。
-
+To calculate the Betweenness Centrality (BC) values between points using nx.betweenness_centrality, and mitigate issues with too small output values causing training problems by applying a logarithmic transformation for convergence
 
 #### 2.2	 Encoder
-在 Encoder 使用三層的 GCN Layer ，embedding dimension 設置為 (128, 128)
+To implement three layers of Graph Convolutional Network (GCN) in the encoder, with an embedding dimension set to (128, 128).
 
 ##### 2.2.1 Neighborhood Aggregation - GCN
 在Encoder 的部分，透過 Neighborhood aggregation models 的方式來得知每個點的 attributes ，好處在於節點之間的參數可以共享也可以在沒看過的節點中給予其 embedding vector 。
+In the Encoder section, utilize neighborhood aggregation models to determine the attributes of each node. The advantage of this approach lies in the ability to share parameters between nodes and provide embedding vectors for unseen nodes. By aggregating information from neighboring nodes, each node can obtain a representation that incorporates information from its local neighborhood. This allows for efficient parameter sharing and enables the model to generalize well to unseen nodes by leveraging information from their neighboring nodes during training.
 
 ![image](https://user-images.githubusercontent.com/51444652/158143193-0b4084f0-f8c6-4583-93bc-1eff05ecde70.png)
 
-在實作中使用  message passing 的方式 ，其概念跟 convolution filter很像 ， 透過相鄰點來求得點的特徵 。(如下) 
+In the implementation, using message passing, which conceptually resembles convolutional filters, to compute node features by aggregating information from neighboring nodes. This method involves passing messages between adjacent nodes in the graph, allowing each node to update its feature representation based on the information received from its neighbors. Similar to convolutional filters aggregating information from neighboring pixels in an image, message passing enables nodes to incorporate information from their local neighborhood. By iteratively passing messages between nodes, each node can refine its feature representation by considering information from its surrounding nodes, resulting in richer and more informative node features. (shown in pic)
 
 ![image](https://user-images.githubusercontent.com/51444652/158143496-3b243491-b7ac-41ed-8833-9223fe63e401.png)
 
 photo credit to :( https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial7/GNN_overview.html) 
 
-Message passing 利用 Pytorch 中 CREATING MESSAGE PASSING NETWORKS 中所提供的 Implementing the GCN Layer 
+Message passing utilizes the implementation of Graph Convolutional Networks (GCN) provided in PyTorch's "Creating Message Passing Networks" module.
+
 
 ##### 2.2.2 COMBINE Function 
-為了獲取比較好的 feature ， combine 在Layer 中neighborhood 的 embedding 和上一層的 embedding，因此採用了 GRU gate的機制， update gate 用來選擇要記得前一層多少的資訊。(公式如下) 
+To obtain better features, it combine the embeddings of the neighborhood and the embeddings from the previous layer in the layer. Therefore, we adopt the mechanism of GRU gates, where the update gate is used to decide how much information from the previous layer to retain. The formula is as follows:
 
 ![image](https://user-images.githubusercontent.com/51444652/158143841-3b596bee-d014-4a2e-bf1c-c4c76b7ed523.png)
 
-作者比較了其他的 Combine function，發現使用 GRU 能夠取得較佳的特徵。
-
+(The author compared other combining functions and found that using the GRU mechanism resulted in obtaining better features.)
 ##### 2.2.3 Layer Aggregation 
-論文中以element-wise的方式，取出最大值，得到一個128維的output。
-計算 Betweennsess centrality 使用 nx.betweenness_centrality 來求 BC 的數值。
+In the paper, the maximum value is obtained using an element-wise approach to generate a 128-dimensional output. Betweenness centrality is calculated using nx.betweenness_centrality to determine the BC values.
 
 #### 2.3 Decoder
-採用兩成的 hidden layer 和 LeakyReLU 將先前的 embedding 轉換為 score 。 
+A hidden layer with a 20% dropout rate and LeakyReLU activation function is employed to transform the previous embeddings into scores. 
 
 ### 3 Training Algorithm
 
@@ -81,30 +80,12 @@ Loss function
 
 ![image](https://user-images.githubusercontent.com/51444652/158565176-c974cae0-a67c-472c-8853-8f00e3c8dc26.png)
 
-Sample node pair : 這裡採用論文的方式隨機 sample 5 個 node (一個點要與五個
-點做比較) 。
-使用 Kendall tau 來觀察其變數之間的相關程度 (ground truth value / predict value)，這裡使用 scipy.stats.kendalltau 來計算。
-透過 model 運算過後得出 predict 的 BC value ，將預測的 BC value 與 ground  truth BC value 排序，取出 top 1 、top5 、top10 的 accuracy。
+
+Sample node pairs: Here, I randomly sample 5 node pairs using the method described in the paper (each node is compared with 5 other nodes). I use Kendall tau to observe the correlation between the ground truth values and predicted values. We calculate this using scipy.stats.kendalltau. After performing computations using the model, I obtain predicted BC values, then sort the predicted BC values and ground truth BC values and calculate the accuracy for the top 1, top 5, and top 10 predictions.
 
 ### 4.Experiment Result
 
 ![image](https://user-images.githubusercontent.com/51444652/158565319-fd056419-6d1d-4380-9a22-dd3d8705ed78.png)
-
-#### 4.1 COMPARE 
-利用 nx.random_graphs.powerlaw_cluster_graph(n, m, p) 來 Generate Graph 這裡將 n ( node 的個數)、 m (each node 的邊數) 、 p (Graph 形成三角形的機率) 做調整以觀察其中的變化 。
-
-* 針對 node 個數調整 (800-1000)、(800-500)、(400-500)、(100-300) 
-![image](https://user-images.githubusercontent.com/51444652/158565661-7f015462-76ae-4b32-9322-9c36f72d1326.png)
-
-
-* 針對 number of random edges to add each new node : 2、4、8、10
-![image](https://user-images.githubusercontent.com/51444652/158565734-2456d8de-6119-4749-a697-317fa4ae5450.png)
-
-
-* p (Graph 形成三角形的機率) 做調整
-
-![image](https://user-images.githubusercontent.com/51444652/158565884-7e825845-bde4-47b6-912d-e9b06c726f64.png)
-![image](https://user-images.githubusercontent.com/51444652/158565937-def9e82e-1a84-4857-9700-23058ff30b0d.png)
 
 
 
