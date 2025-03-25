@@ -1,12 +1,16 @@
-print('yyy')
 from torch_geometric.nn import GCNConv
 import networkx as nx
-
-batch_size = 5
 import wandb
 import random
 import math
 import numpy as np
+from torch_geometric.nn import MessagePassing
+from torch_geometric.utils import add_self_loops, degree
+from torch_geometric.nn import MessagePassing
+import torch.nn as nn
+import torch
+
+batch_size = 5
 
 
 class Graph():
@@ -68,9 +72,6 @@ class Graph():
 
 
 
-from torch_geometric.nn import MessagePassing
-from torch_geometric.utils import add_self_loops, degree
-
 
 class GCNConv(MessagePassing):
     def __init__(self, in_channels, out_channels):
@@ -100,11 +101,6 @@ class GCNConv(MessagePassing):
 
 
 """#### Step 2 : Implement DrBC"""
-
-from torch_geometric.nn import MessagePassing
-import torch.nn as nn
-import torch
-
 
 class Encoder(nn.Module):
     def __init__(self, input_dim=3, embedding_dim=128):
